@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  bmi-calculator:
+    build: .
+    ports:
+      - "3000:80"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    
+  # Development service
+  bmi-calculator-dev:
+    build: .
+    ports:
+      - "3001:80"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+    restart: unless-stopped
+    profiles:
+      - dev

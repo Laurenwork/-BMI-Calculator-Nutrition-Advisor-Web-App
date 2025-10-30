@@ -1,0 +1,258 @@
+.results {
+  display: none;
+}
+
+.show {
+  display: block;
+  animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: 16px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-glass);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: -30% auto auto -30%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(
+    closest-side,
+    rgba(245, 87, 108, 0.15),
+    transparent
+  );
+  pointer-events: none;
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  font-weight: 800;
+  background: var(--gradient-secondary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-align: center;
+  text-shadow: 0 0 20px rgba(245, 87, 108, 0.3);
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .metricsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.metricBox {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.metricBox::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+}
+
+.metricBox:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border-color: var(--text-accent);
+}
+
+.metricLabel {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.metricValue {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--text-accent);
+  text-shadow: 0 0 10px rgba(96, 165, 250, 0.3);
+}
+
+.sectionTitle {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.macrosGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .macrosGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.macroBox {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.macroBox::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-secondary);
+}
+
+.macroBox:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border-color: #f5576c;
+}
+
+.macroName {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.macroValue {
+  font-weight: 800;
+  color: #f5576c;
+  font-size: 1.25rem;
+  text-shadow: 0 0 10px rgba(245, 87, 108, 0.3);
+}
+
+.water {
+  background: linear-gradient(
+    135deg,
+    rgba(79, 209, 197, 0.1) 0%,
+    rgba(4, 211, 97, 0.1) 100%
+  );
+  border: 1px solid rgba(79, 209, 197, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.waterRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.waterValue {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #4dd4ff;
+  text-shadow: 0 0 15px rgba(77, 212, 255, 0.4);
+}
+
+.waterHint {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.recommendations {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.recoList {
+  padding-left: 1rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.recoList li {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.recoList li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #10b981;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .metricsGrid,
+  .macrosGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .metricValue,
+  .macroValue {
+    font-size: 1.25rem;
+  }
+
+  .waterValue {
+    font-size: 1.5rem;
+  }
+}

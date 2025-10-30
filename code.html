@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator BMI Bertema Olahraga</title>
+    <style>
+        /* Reset dan Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0F1724; /* bg gelap */
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        /* Hero Banner Sporty */
+        .hero {
+            background: linear-gradient(135deg, #0B5FFF, #FF7A18);
+            padding: 2rem 1rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '🏃‍♂️ 💪 🏋️‍♀️'; /* Ilustrasi sederhana dengan emoji untuk atlet, weights, running track */
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Container Utama - Mobile First */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Form Input */
+        .input-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #FF7A18;
+        }
+
+        input[type="number"], input[type="radio"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #0B5FFF;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #0F1724;
+            font-size: 1rem;
+        }
+
+        input[type="radio"] {
+            width: auto;
+            margin-right: 0.5rem;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: linear-gradient(135deg, #0B5FFF, #FF7A18);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        button:focus {
+            outline: 2px solid #FF7A18;
+        }
+
+        /* Hasil Section - Hidden awalnya */
+        .results-section {
+            display: none;
+            animation: fadeInSlide 0.5s ease-out;
+        }
+
+        @keyframes fadeInSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .results-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(11, 95, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .bmi-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #FF7A18;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .category {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .ideal-weight {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .recommendation {
+            background: rgba(255, 122, 24, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-left: 4px solid #FF7A18;
+        }
+
+        .icon {
+            font-size: 2rem;
+            margin-right: 0.5rem;
+        }
+
+        .error {
+            color: #FF7A18;
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        /* Responsive - Breakpoint 768px untuk layout dua kolom */
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+                gap: 2rem;
+            }
+
+            .input-section, .results-section {
+                flex: 1;
+            }
+
+            .hero h1 {
+                font-size: 3rem;
+            }
+        }
+
+        /* Light Mode Option - Opsional, bisa toggle jika diperlukan */
+        /* body.light { background: #ffffff; color: #0F1724; } */
+
+        /* Accessibility */
+        .results-section[role="status"] {
+            aria-live: polite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Banner -->
+    <header class="hero">
+        <h1>Kalkulator BMI Olahraga</h1>
+        <p>Hitung BMI Anda dan dapatkan rekomendasi olahraga untuk capai berat ideal!</p>
+    </header>
+
+    <div class="container">
+        <!-- Input Section -->
+        <section class="input-section" aria-labelledby="input-title">
+            <h2 id="input-title">Masukkan Data Anda</h2>
+            <form id="bmiForm">
+                <div class="input-group">
+                    <label for="height">Tinggi (cm)</label>
+                    <input type="number" id="height" name="height" min="50" max="300" required placeholder="Misal: 170">
+                </div>
+                <div class="input-group">
+                    <label for="weight">Berat (kg)</label>
+                    <input type="number" id="weight" name="weight" min="10" max="500" step="0.1" required placeholder="Misal: 70">
+                </div>
+                <div class="input-group">
+                    <label>Jenis Kelamin (Opsional)</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="gender" value="pria"> Pria</label>
+                        <label><input type="radio" name="gender" value="wanita"> Wanita</label>
+                        <label><input type="radio" name="gender" value="lainnya"> Lainnya</label>
+                    </div>
+                </div>
+                <button type="submit">Hitung BMI</button>
+                <div class="error" id="errorMsg" role="alert"></div>
+            </form>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section" id="results" role="status" tabindex="-1">
+            <div class="results-card">
+                <h2 id="results-title">Hasil BMI Anda</h2>
+                <div class="bmi-value" id="bmiValue" aria-live="polite"></div>
+                <div class="category" id="category">
+                    <span class="icon" id="categoryIcon"></span>
+                    <span id="categoryText"></span>
+                </div>
+                <div class="ideal-weight" id="idealWeight"></div>
+                <div class="recommendation" id="recommendation"></div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Modular Functions untuk Vanilla JS ES6+
+
+        // Fungsi Validasi Input
+        function validateInputs(height, weight) {
+            const errors = [];
+            if (height < 50 || height > 300) {
+                errors.push('Tinggi harus antara 50-300 cm.');
+            }
+            if (weight < 10 || weight > 500) {
+                errors.push('Berat harus antara 10-500 kg.');
+            }
+            if (isNaN(height) || isNaN(weight)) {
+                errors.push('Masukkan nilai numerik yang valid.');
+            }
+            return errors;
+        }
+
+        // Fungsi Hitung BMI - Dengan Komentar
+        function calculateBMI(weight, height) {
+            // Normalisasi: height ke meter
+            const heightInMeters = height / 100;
+            // Rumus BMI: weight (kg) / (height (m))^2
+            const bmi = weight / (heightInMeters * heightInMeters);
+            return parseFloat(bmi.toFixed(2)); // 2 desimal
+        }
+
+        // Fungsi Tentukan Kategori
+        function getCategory(bmi) {
+            if (bmi < 18.5) return { text: 'Underweight', icon: '⚖️' }; // Scale
+            if (bmi >= 18.5 && bmi <= 24.9) return { text: 'Normal', icon: '❤️' }; // Heart
+            if (bmi >= 25 && bmi <= 29.9) return { text: 'Overweight', icon: '🏃‍♂️' }; // Running
+            return { text: 'Obese', icon: '🏋️' }; // Dumbbell
+        }
+
+        // Fungsi Hitung Rentang Berat Ideal
+        function calculateIdealWeightRange(height) {
+            const heightInMeters = height / 100;
+            const minWeight = 18.5 * (heightInMeters * heightInMeters);
+            const maxWeight = 24.9 * (heightInMeters * heightInMeters);
+            return {
+                min: parseFloat(minWeight.toFixed(1)),
+                max: parseFloat(maxWeight.toFixed(1))
+            };
+        }
+
+        // Fungsi Rekomendasi Olahraga Berdasarkan Kategori
+        function getRecommendation(category) {
+            const recs = {
+                'Underweight': 'Tambahkan latihan beban ringan untuk membangun massa otot.',
+                'Normal': 'Pertahankan rutinitas olahraga seimbang untuk menjaga kesehatan.',
+                'Overweight': 'Lakukan kardio + defisit kalori untuk menurunkan berat secara bertahap.',
+                'Obese': 'Mulai dengan kardio ringan dan konsultasikan dengan ahli untuk program olahraga aman.'
+            };
+            return recs[category] || 'Konsultasikan dengan profesional kesehatan.';
+        }
+
+        // Event Listener untuk Form Submit
+        document.getElementById('bmiForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const height = parseFloat(document.getElementById('height').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            const gender = document.querySelector('input[name="gender"]:checked')?.value || 'lainnya'; // Opsional, tidak digunakan dalam hitung tapi bisa untuk future
+
+            const errors = validateInputs(height, weight);
+            const errorEl = document.getElementById('errorMsg');
+
+            if (errors.length > 0) {
+                errorEl.textContent = errors.join(' ');
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            errorEl.style.display = 'none';
+
+            // Hitung
+            const bmi = calculateBMI(weight, height);
+            const category = getCategory(bmi);
+            const idealRange = calculateIdealWeightRange(height);
+            const recommendation = getRecommendation(category.text);
+
+            // Tampilkan Hasil
+            document.getElementById('bmiValue').textContent = bmi;
+            document.getElementById('categoryIcon').textContent = category.icon;
+            document.getElementById('categoryText').textContent = category.text;
+            document.getElementById('idealWeight').textContent = `Rentang Berat Ideal: ${idealRange.min} - ${idealRange.max} kg`;
+            document.getElementById('recommendation').innerHTML = `<strong>Rekomendasi Olahraga:</strong> ${recommendation}`;
+
+            // Tampilkan Section Hasil dengan Animasi
+            const resultsSection = document.getElementById('results');
+            resultsSection.style.display = 'block';
+            resultsSection.focus(); // Fokus otomatis untuk accessibility
+        });
+
+        // Optional: Simple Unit Test untuk Fungsi BMI (Console Log)
+        // Jalankan di console untuk test
+        console.log('Unit Test BMI:');
+        console.log('Test 1: BMI(70, 170) =', calculateBMI(70, 170)); // Harus ~24.22
+        console.log('Test 2: Category(17) =', getCategory(17).text); // Underweight
+    </script>
+</body>
+</html>
